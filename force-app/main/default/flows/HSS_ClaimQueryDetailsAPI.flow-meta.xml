@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Call Query Claim Summary External Service.</description>
+        <name>HSS_Call_Query_Claim_Summary_ES</name>
+        <label>Call Query Claim Summary ES</label>
+        <locationX>568</locationX>
+        <locationY>522</locationY>
+        <actionName>QueryClaimsSummary.claims_5</actionName>
+        <actionType>externalService</actionType>
+        <connector>
+            <targetReference>HSS_Check_API_Respose</targetReference>
+        </connector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>claimNumber</name>
+            <value>
+                <elementReference>ACC45Number</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>52.0</apiVersion>
+    <assignments>
+        <description>Assigning Summary Collection.</description>
+        <name>HSS_Assigning_Summary_Collection</name>
+        <label>Assigning Summary Collection</label>
+        <locationX>805</locationX>
+        <locationY>700</locationY>
+        <assignmentItems>
+            <assignToReference>queryClaimSummaryColl</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>HSS_Call_Query_Claim_Summary_ES.200.claimSummaryList</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>HSS_Looping_Over_Claim_Summary_Collection</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Assigning error collection to a list.</description>
+        <name>HSS_Assigning_Summary_Error_Collection</name>
+        <label>Assigning Summary Error Collection</label>
+        <locationX>397</locationX>
+        <locationY>703</locationY>
+        <assignmentItems>
+            <assignToReference>claimSummaryErrorList</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>HSS_Call_Query_Claim_Summary_ES.400Exc.errors</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>claimSummaryErrorList</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>HSS_Call_Query_Claim_Summary_ES.401Exc.errors</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>claimSummaryErrorList</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>HSS_Call_Query_Claim_Summary_ES.403Exc.errors</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>claimSummaryErrorList</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>HSS_Call_Query_Claim_Summary_ES.404Exc.errors</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>claimSummaryErrorList</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>HSS_Call_Query_Claim_Summary_ES.500Exc.errors</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>errorMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>HSS_Call_Query_Claim_Summary_ES.defaultExc</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>HSS_Looping_over_summary_error_list</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Get Single Claim Summary details.</description>
+        <name>HSS_Get_Single_Claim_Summary</name>
+        <label>Get Single Claim Summary</label>
+        <locationX>810</locationX>
+        <locationY>1153</locationY>
+        <assignmentItems>
+            <assignToReference>queryClaimSummarySingle</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>HSS_Looping_Over_Claim_Summary_Collection</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>HSS_Looping_Over_Claim_Summary_Collection</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Storing error message.</description>
+        <name>HSS_Getting_Summary_Error_Message</name>
+        <label>Getting Summary Error Message</label>
+        <locationX>397</locationX>
+        <locationY>1169</locationY>
+        <assignmentItems>
+            <assignToReference>errorMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>HSS_Looping_over_summary_error_list.message</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>HSS_Looping_over_summary_error_list</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>Check if we are getting a success response.</description>
+        <name>HSS_Check_API_Respose</name>
+        <label>Check API Respose</label>
+        <locationX>560</locationX>
+        <locationY>704</locationY>
+        <defaultConnector>
+            <targetReference>HSS_Assigning_Summary_Error_Collection</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Error</defaultConnectorLabel>
+        <rules>
+            <name>HSS_Success</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>HSS_Call_Query_Claim_Summary_ES.200</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>HSS_Assigning_Summary_Collection</targetReference>
+            </connector>
+            <label>Success</label>
+        </rules>
+    </decisions>
+    <description>This flow consists of one API call, Get Claim Summary by Claim Number(claims_5).</description>
+    <interviewLabel>Claim Query Details API {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Claim Query Details API</label>
+    <loops>
+        <description>Looping Over Claim Summary Collection.</description>
+        <name>HSS_Looping_Over_Claim_Summary_Collection</name>
+        <label>Looping Over Claim Summary Collection</label>
+        <locationX>809</locationX>
+        <locationY>909</locationY>
+        <collectionReference>queryClaimSummaryColl</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>HSS_Get_Single_Claim_Summary</targetReference>
+        </nextValueConnector>
+    </loops>
+    <loops>
+        <description>Looping over summary error list.</description>
+        <name>HSS_Looping_over_summary_error_list</name>
+        <label>Looping over summary error list</label>
+        <locationX>396</locationX>
+        <locationY>920</locationY>
+        <collectionReference>claimSummaryErrorList</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>HSS_Getting_Summary_Error_Message</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <start>
+        <locationX>442</locationX>
+        <locationY>318</locationY>
+        <connector>
+            <targetReference>HSS_Call_Query_Claim_Summary_ES</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>ACC45 Number.</description>
+        <name>ACC45Number</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>claimSummaryErrorList</name>
+        <apexClass>ExternalService__QueryClaimsSummary_ApiError</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Error message to be displayed on screen.</description>
+        <name>errorMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>queryClaimSummaryColl</name>
+        <apexClass>ExternalService__QueryClaimsSummary_QueryClaimSummaryResponse</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Single claim summary details.</description>
+        <name>queryClaimSummarySingle</name>
+        <apexClass>ExternalService__QueryClaimsSummary_QueryClaimSummaryResponse</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

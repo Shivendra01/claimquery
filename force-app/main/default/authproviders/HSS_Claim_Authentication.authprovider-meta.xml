@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuthProvider xmlns="http://soap.sforce.com/2006/04/metadata">
+    <authorizeUrl>https://login.microsoftonline.com/8506768f-a7d1-475b-901c-fc1c222f496a/oauth2/v2.0/authorize</authorizeUrl>
+    <consumerKey>4150a3e6-1ae2-4aaf-a3e9-33bb0dd60cc4</consumerKey>
+    <consumerSecret>5VUXFXQZu4TZvALxvBlC5GACHEB736inXejFuSzpHdfSV0tq95KGbA==</consumerSecret>
+    <defaultScopes>api://8e28802e-a14a-4889-871a-d28781d32fb6/ACC45ClaimSubmission_E2E01 offline_access</defaultScopes>
+    <friendlyName>Claim Authentication</friendlyName>
+    <includeOrgIdInIdentifier>false</includeOrgIdInIdentifier>
+    <providerType>OpenIdConnect</providerType>
+    <sendAccessTokenInHeader>true</sendAccessTokenInHeader>
+    <sendClientCredentialsInHeader>false</sendClientCredentialsInHeader>
+    <sendSecretInApis>true</sendSecretInApis>
+    <tokenUrl>https://login.microsoftonline.com/8506768f-a7d1-475b-901c-fc1c222f496a/oauth2/v2.0/token</tokenUrl>
+</AuthProvider>

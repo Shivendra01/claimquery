@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>52.0</apiVersion>
+    <isExposed>true</isExposed>
+    <description>sObjects List View</description>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default,lightning__RecordPage,lightning__HomePage">
+            <property name="SFDCobjectApiName" label="Object API Name" type="String" default=""
+                            description="Provide Object Api name"/>
+            <property name="fieldSetName" label="FieldSet Name" type="String" default="" 
+                            description="Provide Fieldset name"/>
+            <property name="firstColumnAsRecordHyperLink" label="First Column As RecordHyperLink?" 
+                            type="String" datasource="Yes,No" default="Yes"
+                            description="Select Yes in order to make first column as hyperlink otherwise No"/>     
+            <property name="filters" label="Filter" type="String" description="Provide SOQL filter if required"/> 
+            <property name="sortOrderDirectionDef" type="String" label="Default Sorting Order" 
+                            description="Provide order in which you want your table to be sorted when it is loaded"/> 
+            <property name="sortOrderFieldDef" type="String" label="Default Sorting Field" default=""
+                            description="Provide field name by which you want your table to be sorted when it is loaded"/>  
+            <property name="sortingEnabled" type="Boolean" label="Enable Sorting?"
+                            description="Tick the checkbox if sorting is needed"/> 
+            <property name="searchBarEnabled" type="Boolean" label="Enable Searching?" default="false"
+                            description="Tick the checkbox in order to get search functionality"/>   
+            <property name="label" type="String" label="Label" default="Give Label" 
+                            description="Provide heading of the datatable"/>   
+            <property name="columnLabels" type="String" label="Column Label" 
+                            description="Provide label of each column separated by a semicolon"/> 
+            <property name="searchPlaceholder" type="String" label="Search Placeholder Text"
+                            description="Provide placeholder text for search box"/>
+            <property name="displayText" type="String" label="Empty Table Text" 
+                            description="Provide text to be displayed on UI when table has no records to display"/>
+            <property name="urlObjectAndField" type="String" label="Url Object And Field"
+                            description="If first column is as recordHyperLink and refering a related object 
+                            provide object and Id field as (object;field)"/>
+            <property name="recordCountForPagination" type="Integer" label="Record count for pagination"
+                            description="Number of records to be in table in order to have pagination"/>
+            <property name="actions" type="String" label="Row action" description="Semicolon separated row actions list."/>
+            <property name="minColumnWidth" type="Integer" label="Minimum Column Width" description="Minimum width of each column in the table" default="100"/>
+            <property name="columnWidthMode" type="String" label="Mode of Column Width" datasource="auto,fixed" default="auto" description="Select the width mode for the column"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

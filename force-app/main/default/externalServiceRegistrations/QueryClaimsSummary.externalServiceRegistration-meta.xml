@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalServiceRegistration xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Enables the API call to query for a list of claim summary statuses which can be filtered by values such as patient name</description>
+    <label>QueryClaimsSummary</label>
+    <namedCredential>HSS_Search_Claims</namedCredential>
+    <operations>
+        <active>true</active>
+        <name>claimsx5f5</name>
+    </operations>
+    <operations>
+        <active>true</active>
+        <name>claimsx5f6</name>
+    </operations>
+    <operations>
+        <active>true</active>
+        <name>claimsx5f7</name>
+    </operations>
+    <registrationProviderType>Custom</registrationProviderType>
+    <schema>{
+  &quot;swagger&quot;: &quot;2.0&quot;,
+  &quot;info&quot;: {
+    &quot;title&quot;: &quot;HSS-Query-Claims-V2-Claims-Summary&quot;,
+    &quot;version&quot;: &quot;1.0&quot;,
+    &quot;description&quot;: &quot;Health Sector Strategy - Query Claims Summary Trusted Business API&quot;
+  },
+  &quot;host&quot;: &quot;_TRUSTED_APIM_HOST_&quot;,
+  &quot;basePath&quot;: &quot;&quot;,
+  &quot;schemes&quot;: [
+    &quot;https&quot;
+  ],
+  &quot;paths&quot;: {
+    &quot;/claims/summary/patient&quot;: {
+      &quot;get&quot;: {
+        &quot;tags&quot;: [
+          &quot;Claims Summary&quot;
+        ],
+        &quot;summary&quot;: &quot;GetClaimSummaryPatient&quot;,
+        &quot;description&quot;: &quot;Returns a list of Claims for the digital certificate owners organisationThe query parameters are provided to filter Claims by patient firstname and surname.&quot;,
+        &quot;operationId&quot;: &quot;claims_6&quot;,
+        &quot;consumes&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;produces&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;parameters&quot;: [
+          {
+            &quot;name&quot;: &quot;firstName&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;firstName&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;surname&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;surname&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;page&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;page&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;integer&quot;,
+            &quot;default&quot;: 1,
+            &quot;format&quot;: &quot;int32&quot;
+          },
+          {
+            &quot;name&quot;: &quot;pageSize&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;pageSize&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;integer&quot;,
+            &quot;default&quot;: 25,
+            &quot;format&quot;: &quot;int32&quot;
+          }
+        ],
+        &quot;responses&quot;: {
+          &quot;200&quot;: {
+            &quot;description&quot;: &quot;Success&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/QueryClaimSummaryResponseList&quot;
+            }
+          },
+          &quot;400&quot;: {
+            &quot;description&quot;: &quot;Bad Request: invalid data&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;401&quot;: {
+            &quot;description&quot;: &quot;Unauthorized: authentication error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;403&quot;: {
+            &quot;description&quot;: &quot;Forbidden: authorization error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;404&quot;: {
+            &quot;description&quot;: &quot;Not Found&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;500&quot;: {
+            &quot;description&quot;: &quot;Internal Server Error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          }
+        }
+      }
+    },
+    &quot;/claims/summary/status&quot;: {
+      &quot;get&quot;: {
+        &quot;tags&quot;: [
+          &quot;Claims Summary&quot;
+        ],
+        &quot;summary&quot;: &quot;GetClaimSummaryStatus&quot;,
+        &quot;description&quot;: &quot;Returns a list of Claims for the digital certificate owners organisation. The query parameters are provided to filter Claims by registration status and date range, define result page size and specify which page of results to return. The maximum date range is 13 months and maximum Claims per page is 25.&quot;,
+        &quot;operationId&quot;: &quot;claims_7&quot;,
+        &quot;consumes&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;produces&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;parameters&quot;: [
+          {
+            &quot;name&quot;: &quot;status&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;status&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;,
+            &quot;enum&quot;: [
+              &quot;FAILED&quot;,
+              &quot;RECEIPTED&quot;
+            ]
+          },
+          {
+            &quot;name&quot;: &quot;startDate&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;startDate&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;endDate&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;endDate&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;page&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;page&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;integer&quot;,
+            &quot;default&quot;: 1,
+            &quot;format&quot;: &quot;int32&quot;
+          },
+          {
+            &quot;name&quot;: &quot;pageSize&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;pageSize&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;integer&quot;,
+            &quot;default&quot;: 25,
+            &quot;format&quot;: &quot;int32&quot;
+          }
+        ],
+        &quot;responses&quot;: {
+          &quot;200&quot;: {
+            &quot;description&quot;: &quot;Success&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/QueryClaimSummaryResponseList&quot;
+            }
+          },
+          &quot;400&quot;: {
+            &quot;description&quot;: &quot;Bad Request: invalid data&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;401&quot;: {
+            &quot;description&quot;: &quot;Unauthorized: authentication error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;403&quot;: {
+            &quot;description&quot;: &quot;Forbidden: authorization error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;404&quot;: {
+            &quot;description&quot;: &quot;Not Found&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;500&quot;: {
+            &quot;description&quot;: &quot;Internal Server Error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          }
+        }
+      }
+    },
+    &quot;/claims/summary/{claimNumber}&quot;: {
+      &quot;get&quot;: {
+        &quot;tags&quot;: [
+          &quot;Claims Summary&quot;
+        ],
+        &quot;summary&quot;: &quot;GetClaimsByClaimNumber&quot;,
+        &quot;description&quot;: &quot;Returns a list of Claims for the digital certificate owners organisationThe query parameters are provided to filter Claims by claim number.&quot;,
+        &quot;operationId&quot;: &quot;claims_5&quot;,
+        &quot;consumes&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;produces&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;parameters&quot;: [
+          {
+            &quot;name&quot;: &quot;claimNumber&quot;,
+            &quot;in&quot;: &quot;path&quot;,
+            &quot;description&quot;: &quot;claimNumber&quot;,
+            &quot;required&quot;: true,
+            &quot;default&quot;: &quot;&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        ],
+        &quot;responses&quot;: {
+          &quot;200&quot;: {
+            &quot;description&quot;: &quot;Success&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/QueryClaimSummaryResponseList&quot;
+            }
+          },
+          &quot;400&quot;: {
+            &quot;description&quot;: &quot;Bad Request: invalid data&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;401&quot;: {
+            &quot;description&quot;: &quot;Unauthorized: authentication error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;403&quot;: {
+            &quot;description&quot;: &quot;Forbidden: authorization error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;404&quot;: {
+            &quot;description&quot;: &quot;Not Found&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;500&quot;: {
+            &quot;description&quot;: &quot;Internal Server Error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          }
+        }
+      }
+    }
+  },
+  &quot;definitions&quot;: {
+    &quot;ApiError&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;field&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;message&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    },
+    &quot;ApiExceptions&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;errors&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/ApiError&quot;
+          }
+        }
+      }
+    },
+    &quot;QueryClaimSummaryResponse&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;claimNumber&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;claimStatus&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;dateCreated&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;
+        },
+        &quot;facilityName&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;id&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;idType&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;invalidReason&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;invalidReasonDescription&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;lockId&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;organisation&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;organisationUser&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;patientName&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;pmsName&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;submissionChannel&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;treatmentProvider&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;description&quot;: &quot;Response after querying claim summary list&quot;
+    },
+    &quot;QueryClaimSummaryResponseList&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;claimSummaryList&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/QueryClaimSummaryResponse&quot;
+          }
+        },
+        &quot;generatedAt&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;
+        },
+        &quot;message&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;page&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;
+        },
+        &quot;pageSize&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;
+        },
+        &quot;totalPages&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;
+        }
+      }
+    }
+  }
+}</schema>
+    <schemaType>OpenApi</schemaType>
+    <serviceBinding>{&quot;compatibleMediaTypes&quot;:{}}</serviceBinding>
+    <status>Complete</status>
+</ExternalServiceRegistration>
