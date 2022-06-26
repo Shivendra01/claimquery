@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalServiceRegistration xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Enables the API call to query the status of either a specific claim, a list of claims by patient, or registration status of list of claims by claimId values.</description>
+    <label>QueryClaimsStatus</label>
+    <namedCredential>HSS_Search_Claims</namedCredential>
+    <operations>
+        <active>true</active>
+        <name>claimsx5f2</name>
+    </operations>
+    <operations>
+        <active>true</active>
+        <name>claimsx5f3</name>
+    </operations>
+    <operations>
+        <active>true</active>
+        <name>claimsx5f4</name>
+    </operations>
+    <registrationProviderType>Custom</registrationProviderType>
+    <schema>{
+  &quot;swagger&quot;: &quot;2.0&quot;,
+  &quot;info&quot;: {
+    &quot;title&quot;: &quot;HSS-Query-Claims-V2-Claims-Status&quot;,
+    &quot;version&quot;: &quot;1.0&quot;,
+    &quot;description&quot;: &quot;Health Sector Strategy - Query Claims Status Trusted Business API&quot;
+  },
+  &quot;host&quot;: &quot;_TRUSTED_APIM_HOST_&quot;,
+  &quot;basePath&quot;: &quot;&quot;,
+  &quot;schemes&quot;: [
+    &quot;https&quot;
+  ],
+  &quot;paths&quot;: {
+        &quot;/claims/status&quot;: {
+      &quot;get&quot;: {
+        &quot;tags&quot;: [
+          &quot;Claims&quot;
+        ],
+        &quot;summary&quot;: &quot;GetClaimStatus&quot;,
+        &quot;description&quot;: &quot;Returns the ACC status of a specific Claim.&quot;,
+        &quot;operationId&quot;: &quot;claims_2&quot;,
+        &quot;consumes&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;produces&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;parameters&quot;: [
+          {
+            &quot;name&quot;: &quot;claimNumber&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;claimNumber&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;vendorId&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;vendorId&quot;,
+            &quot;required&quot;: true,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;providerId&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;providerId&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        ],
+        &quot;responses&quot;: {
+          &quot;200&quot;: {
+            &quot;description&quot;: &quot;Success&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ClaimStatusResponseList&quot;
+            }
+          },
+          &quot;400&quot;: {
+            &quot;description&quot;: &quot;Bad Request: invalid data&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;401&quot;: {
+            &quot;description&quot;: &quot;Unauthorized: authentication error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;403&quot;: {
+            &quot;description&quot;: &quot;Forbidden: authorization error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;404&quot;: {
+            &quot;description&quot;: &quot;Not Found&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;500&quot;: {
+            &quot;description&quot;: &quot;Internal Server Error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          }
+        }
+      },
+      &quot;post&quot;: {
+        &quot;tags&quot;: [
+          &quot;Claims&quot;
+        ],
+        &quot;summary&quot;: &quot;BatchClaimStatus&quot;,
+        &quot;description&quot;: &quot;Returns the registration status for a list of claims. Request body is a comma seperated list of claimId values.&quot;,
+        &quot;operationId&quot;: &quot;claims_4&quot;,
+        &quot;consumes&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;produces&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;parameters&quot;: [
+          {
+            &quot;in&quot;: &quot;body&quot;,
+            &quot;name&quot;: &quot;claims&quot;,
+            &quot;description&quot;: &quot;claims&quot;,
+            &quot;required&quot;: true,
+            &quot;schema&quot;: {
+              &quot;type&quot;: &quot;array&quot;,
+              &quot;items&quot;: {
+                &quot;$ref&quot;: &quot;#/definitions/ClaimItem&quot;
+              }
+            }
+          },
+          {
+            &quot;name&quot;: &quot;vendorId&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;vendorId&quot;,
+            &quot;required&quot;: false,
+            &quot;default&quot;: &quot;&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;providerId&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;providerId&quot;,
+            &quot;required&quot;: false,
+            &quot;default&quot;: &quot;&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        ],
+        &quot;responses&quot;: {
+          &quot;200&quot;: {
+            &quot;description&quot;: &quot;Success&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ClaimStatusResponseList&quot;
+            }
+          },
+          &quot;400&quot;: {
+            &quot;description&quot;: &quot;Bad Request: invalid data&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;401&quot;: {
+            &quot;description&quot;: &quot;Unauthorized: authentication error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;403&quot;: {
+            &quot;description&quot;: &quot;Forbidden: authorization error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;404&quot;: {
+            &quot;description&quot;: &quot;Not Found&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;500&quot;: {
+            &quot;description&quot;: &quot;Internal Server Error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          }
+        }
+      }
+    },
+    &quot;/claims/status/filter&quot;: {
+      &quot;get&quot;: {
+        &quot;tags&quot;: [
+          &quot;Claims&quot;
+        ],
+        &quot;summary&quot;: &quot;GetClaimsFiltered&quot;,
+        &quot;description&quot;: &quot;Returns a list of claims status by filtering for specific values.&quot;,
+        &quot;operationId&quot;: &quot;claims_3&quot;,
+        &quot;consumes&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;produces&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;parameters&quot;: [
+          {
+            &quot;name&quot;: &quot;vendorId&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;vendorId&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;providerId&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;providerId&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;nhi&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;nhi&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          {
+            &quot;name&quot;: &quot;dateOfBirth&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;dateOfBirth&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        ],
+        &quot;responses&quot;: {
+          &quot;200&quot;: {
+            &quot;description&quot;: &quot;Success&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ClaimStatusResponseList&quot;
+            }
+          },
+          &quot;400&quot;: {
+            &quot;description&quot;: &quot;Bad Request: invalid data&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;401&quot;: {
+            &quot;description&quot;: &quot;Unauthorized: authentication error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;403&quot;: {
+            &quot;description&quot;: &quot;Forbidden: authorization error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;404&quot;: {
+            &quot;description&quot;: &quot;Not Found&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;500&quot;: {
+            &quot;description&quot;: &quot;Internal Server Error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          }
+        }
+      }
+    }
+  },
+  &quot;definitions&quot;: {
+    &quot;ApiError&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;field&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;message&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    },
+    &quot;ApiExceptions&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;errors&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/ApiError&quot;
+          }
+        }
+      }
+    },
+    &quot;ClaimItem&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;claim&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;claimId&quot;
+        }
+      }
+    },
+    &quot;ClaimStatusDiagnosis&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;diagnosisCode&quot;,
+        &quot;diagnosisCodeType&quot;,
+        &quot;diagnosisDescription&quot;,
+        &quot;diagnosisSide&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;diagnosisAction&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Required for medical certificates if modifying diagnosis.&quot;,
+          &quot;enum&quot;: [
+            &quot;add&quot;,
+            &quot;modify&quot;,
+            &quot;delete&quot;
+          ]
+        },
+        &quot;injuryStatus&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;resultError&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;resultErrorCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;snomedCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;snomedCodeDescription&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;diagnosisCodeType&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See codetables for list of valid code types&quot;
+        },
+        &quot;diagnosisCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See codetables for list of valid codes&quot;
+        },
+        &quot;diagnosisDescription&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;diagnosisSide&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;enum&quot;: [
+            &quot;left&quot;,
+            &quot;right&quot;,
+            &quot;notApplicable&quot;
+          ]
+        }
+      }
+    },
+    &quot;ClaimStatusResponse&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;acc45Number&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;accidentDate&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;
+        },
+        &quot;claimNumber&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;coverStatus&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;diagnoses&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/ClaimStatusDiagnosis&quot;
+          }
+        },
+        &quot;injuryResolved&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;injuryResolvedFromDate&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;
+        },
+        &quot;injuryResolvedToDate&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;
+        },
+        &quot;partialNHINumber&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    },
+    &quot;ClaimStatusResponseList&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;claimStatusList&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/ClaimStatusResponse&quot;
+          }
+        },
+        &quot;generatedAt&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;
+        },
+        &quot;message&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;page&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;
+        },
+        &quot;pageSize&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;
+        },
+        &quot;totalPages&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;
+        }
+      }
+    }
+  }
+}</schema>
+    <schemaType>OpenApi</schemaType>
+    <serviceBinding>{&quot;compatibleMediaTypes&quot;:{}}</serviceBinding>
+    <status>Complete</status>
+</ExternalServiceRegistration>

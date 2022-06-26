@@ -1,0 +1,100 @@
+<template>    
+    <div class="c-container">
+        <div class="slds-card">
+            <!--Giving a dynamic label to the datatable-->
+            <template if:true={label}>
+                <h1 class="slds-card__header-title slds-text-heading_medium slds-m-top_small slds-p-around_small">
+                    <span><b>{label}</b></span>
+                </h1>
+            </template>
+            <!--Displaying records per page combobox if pagination is visible-->
+            <div class="slds-wrap slds-grid">
+                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-p-around_small slds-p-bottom_none">
+                    <div if:true={showPagination} class="slds-list_inline slds-p-bottom_xx-small customSelect">
+                        <span class="slds-p-top_x-small"> <label class="slds-text-color_weak slds-p-horizontal_x-small" for="recordsPerPage">Records per page:</label></span>
+                        <lightning-combobox style="width:5rem"
+                            name="recordPerPage"
+                            value={pageSize}
+                            variant="label-hidden"
+                            options={pageSizeOptions}
+                            onchange={handleRecordsPerPage} >
+                        </lightning-combobox>
+                    </div> 
+                </div>
+                <!--Displaying a search bar if it is enabled-->
+                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-p-around_small slds-p-bottom_none">
+                    <template if:true={searchBarEnabled}>
+                        <lightning-input label="" type="search" placeholder={searchPlaceholder} variant="label-hidden" value={searchKey} onchange={handleKeyChange}></lightning-input>
+                    </template>
+                </div>
+                <!--Displaying input box to enter the page number to navigate to that page-->
+                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-p-around_small slds-p-bottom_none">
+                    <div if:true={showPagination} class="slds-list_inline slds-p-left_xx-large">
+                        <label class="slds-p-top_x-small slds-text-color_weak slds-p-horizontal_x-small" for="pageNum">Page:</label>
+                        <input type="number" name="inputPageNo" onchange={handlePageNumberChange} max={totalPages} min=1 class="slds-input" value={pageNumber} style="width:5rem;"></input>
+                        <span class="slds-p-top_x-small">&nbsp;of&nbsp;<b id="totalPages">{totalPages}</b></span>
+                    </div>
+                </div>
+            </div>
+            <!--Defining a datatable with sorting enabled-->
+            <div class="slds-card__body">
+                <template if:true={sortingEnabled}>
+                    <lightning-datatable 
+                        key-field="Id"
+                        data={tableData}
+                        columns={columns} 
+                        min-column-width="100"
+                        column-widths-mode="auto"
+                        hide-checkbox-column
+                        default-sort-direction={defaultSortDirection}
+                        sorted-direction={sortDirection}
+                        sorted-by={sortedBy}
+                        onsort={onHandleSort}
+                        onrowaction={handleRowAction}>
+                    </lightning-datatable> 
+                </template>
+                <!--Defining a datatable with sorting disabled-->
+                <template if:false={sortingEnabled}>
+                    <lightning-datatable 
+                        key-field="Id"
+                        data={tableData}
+                        columns={columns}
+                        min-column-width="100"
+                        column-widths-mode="auto"
+                        onrowaction={handleRowAction}
+                        hide-checkbox-column>
+                    </lightning-datatable>
+                </template>
+                <!--Message to be displayed when there are no records-->
+                <template if:true={noRecordsFound}>
+                    <div class="slds-text-align_center slds-text-heading_small slds-box">
+                        {displayText}
+                    </div>
+                </template>
+                <!--Displaying navigation buttons-->
+                <template if:true={showPagination}>
+                    <div class="slds-m-around_medium slds-align_absolute-center">
+                        <div>
+                            <lightning-button-group>
+                                <lightning-button label="First" onclick={goToFirst} icon-name="utility:chevronleft"
+                                    icon-position="left" disabled={disableBack}></lightning-button>
+                                <lightning-button label="Previous" onclick={goToPrevious} icon-name="utility:chevronleft"
+                                    icon-position="left" disabled={disableBack}></lightning-button>
+                            </lightning-button-group>
+                            <span style="color:rgb(1,117,218)">&nbsp;
+                                    Displaying {startIndex} to {endIndex} of {recordCount} records.
+                                    Page {pageNumber} of {totalPages}. &nbsp;
+                            </span>
+                            <lightning-button-group> 
+                                <lightning-button label="Next" onclick={goToNext} icon-name="utility:chevronright"
+                                    icon-position="right" disabled={disableForward}></lightning-button>
+                                <lightning-button label="Last" onclick={goToLast} icon-name="utility:chevronright"
+                                    icon-position="right" disabled={disableForward}></lightning-button>
+                            </lightning-button-group>
+                        </div>
+                    </div>
+                </template>
+            </div>                           
+        </div> 
+    </div>    
+</template>

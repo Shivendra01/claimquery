@@ -1,0 +1,21 @@
+<template>
+<!-- this if is required to make sure rendering happens AFTER the data is retreived. -->
+  <template if:true={dataIsLoaded}>
+    <c-list-view-base-cmp 
+        columns={columns}
+        all-records={recordArrayJson}
+        sort-order-direction-def={sortOrderDirectionDef}
+        sort-order-field-def={sortOrderFieldDef}
+        sorting-enabled={sortingEnabled}
+        search-bar-enabled={searchBarEnabled}
+        label={label}
+        search-placeholder={searchPlaceholder}
+        display-text={displayText}
+        record-count-for-pagination={recordCountForPagination} 
+        actions={actions}
+        onrowaction={handleRowAction}
+        min-column-width={minColumnWidth}
+        column-width-mode={columnWidthMode}>
+    </c-list-view-base-cmp>
+  </template>
+</template>

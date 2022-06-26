@@ -1,0 +1,721 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalServiceRegistration xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Enables the API call to query the details of a specific claim based on an input claim number</description>
+    <label>QueryClaims</label>
+    <namedCredential>HSS_Search_Claims</namedCredential>
+    <operations>
+        <active>true</active>
+        <name>claimsx5f1</name>
+    </operations>
+    <registrationProviderType>Custom</registrationProviderType>
+    <schema>{
+  &quot;swagger&quot;: &quot;2.0&quot;,
+  &quot;info&quot;: {
+    &quot;title&quot;: &quot;HSS-Query-Claims-V2-Claims&quot;,
+    &quot;version&quot;: &quot;1.0&quot;,
+    &quot;description&quot;: &quot;Health Sector Strategy - Query Claims Trusted Business API&quot;
+  },
+  &quot;host&quot;: &quot;_TRUSTED_APIM_HOST_&quot;,
+  &quot;basePath&quot;: &quot;&quot;,
+  &quot;schemes&quot;: [
+    &quot;https&quot;
+  ],
+  &quot;paths&quot;: {
+    &quot;/claims&quot;: {
+      &quot;get&quot;: {
+        &quot;tags&quot;: [
+          &quot;Claims&quot;
+        ],
+        &quot;summary&quot;: &quot;GetClaim&quot;,
+        &quot;description&quot;: &quot;Returns the details of the specific Claim for users authorised to view the Claim.&quot;,
+        &quot;operationId&quot;: &quot;claims_1&quot;,
+        &quot;consumes&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;produces&quot;: [
+          &quot;application/json&quot;
+        ],
+        &quot;parameters&quot;: [
+          {
+            &quot;name&quot;: &quot;claimId&quot;,
+            &quot;in&quot;: &quot;query&quot;,
+            &quot;description&quot;: &quot;claimId&quot;,
+            &quot;required&quot;: false,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        ],
+        &quot;responses&quot;: {
+          &quot;200&quot;: {
+            &quot;description&quot;: &quot;Success&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ClaimResponse&quot;
+            }
+          },
+          &quot;400&quot;: {
+            &quot;description&quot;: &quot;Bad Request: invalid data&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;401&quot;: {
+            &quot;description&quot;: &quot;Unauthorized: authentication error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;403&quot;: {
+            &quot;description&quot;: &quot;Forbidden: authorization error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;404&quot;: {
+            &quot;description&quot;: &quot;Not Found&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          },
+          &quot;500&quot;: {
+            &quot;description&quot;: &quot;Internal Server Error&quot;,
+            &quot;schema&quot;: {
+              &quot;$ref&quot;: &quot;#/definitions/ApiExceptions&quot;
+            }
+          }
+        }
+      }
+    }
+  },
+  &quot;definitions&quot;: {
+    &quot;Address&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;city&quot;,
+        &quot;country&quot;,
+        &quot;line1&quot;,
+        &quot;postCode&quot;,
+        &quot;type&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;type&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;enum&quot;: [
+            &quot;Home&quot;,
+            &quot;Postal&quot;
+          ]
+        },
+        &quot;line1&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;line2&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;suburb&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Supply suburb if different to city&quot;
+        },
+        &quot;city&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;postCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;country&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    },
+    &quot;ApiError&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;field&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;message&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    },
+    &quot;ApiExceptions&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;errors&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/ApiError&quot;
+          }
+        }
+      }
+    },
+    &quot;Claim&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;declaration&quot;,
+        &quot;diagnosis&quot;,
+        &quot;employment&quot;,
+        &quot;injury&quot;,
+        &quot;patient&quot;,
+        &quot;pmsSoftwareName&quot;,
+        &quot;pmsSoftwareVersion&quot;,
+        &quot;provider&quot;,
+        &quot;vendor&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;pmsSoftwareName&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;pmsSoftwareVersion&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;claimNumber&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;example&quot;: &quot;vLjVXyC2E3FNQ0i&quot;,
+          &quot;description&quot;: &quot;The ACC45 claim number, which must be unique. Format [A-Za-z0-9]{1,15}.&quot;
+        },
+        &quot;vendor&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Vendor&quot;
+        },
+        &quot;provider&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Provider&quot;
+        },
+        &quot;patient&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Patient&quot;
+        },
+        &quot;employment&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Employment&quot;
+        },
+        &quot;injury&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Injury&quot;
+        },
+        &quot;diagnosis&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;description&quot;: &quot;Up to 10 diagnoses can be included.&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/Diagnosis&quot;
+          }
+        },
+        &quot;workCapacity&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/WorkCapacity&quot;
+        },
+        &quot;referrals&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;description&quot;: &quot;Up to 5 referrals may be included.&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/Referral&quot;
+          }
+        },
+        &quot;declaration&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Declaration&quot;
+        }
+      },
+      &quot;description&quot;: &quot;The entire payload for create/update/get about a Claim&quot;
+    },
+    &quot;ClaimResponse&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;claim&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/Claim&quot;
+          }
+        },
+        &quot;generatedAt&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;
+        },
+        &quot;message&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;page&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;
+        },
+        &quot;pageSize&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;
+        },
+        &quot;totalPages&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;
+        }
+      }
+    },
+    &quot;Contact&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;emailAddress&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;If the patient has an email address, enter it (must be in valid email address format).&quot;
+        },
+        &quot;mobilePhone&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;example&quot;: &quot;0211234567&quot;,
+          &quot;description&quot;: &quot;If the patient has a mobile number, enter it. Include the network code but no spaces or parentheses.&quot;
+        },
+        &quot;homePhone&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;example&quot;: &quot;041234567&quot;,
+          &quot;description&quot;: &quot;Include the area code, but no spaces or parentheses.&quot;
+        },
+        &quot;workPhone&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;example&quot;: &quot;041234567&quot;,
+          &quot;description&quot;: &quot;Include the area code, but no spaces or parentheses.&quot;
+        }
+      }
+    },
+    &quot;DateRange&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;fromDate&quot;,
+        &quot;toDate&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;fromDate&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;,
+          &quot;description&quot;: &quot;Date ranges must have no gaps and no overlaps.&quot;
+        },
+        &quot;toDate&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;,
+          &quot;description&quot;: &quot;Date ranges must have no gaps and no overlaps.&quot;
+        }
+      },
+      &quot;description&quot;: &quot;A valid date is required for each incapacity type selected.&quot;
+    },
+    &quot;Declaration&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;providerDeclaration&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;providerDeclaration&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;,
+          &quot;description&quot;: &quot;The date the form was submitted.&quot;
+        }
+      }
+    },
+    &quot;Diagnosis&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;diagnosisCode&quot;,
+        &quot;diagnosisCodeType&quot;,
+        &quot;diagnosisDescription&quot;,
+        &quot;diagnosisSide&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;diagnosisCodeType&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See the DiagnosisCodingSystem code tables for valid values.&quot;
+        },
+        &quot;diagnosisCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Alphanumeric, can include &apos;.&apos;&quot;
+        },
+        &quot;diagnosisDescription&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;diagnosisSide&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;enum&quot;: [
+            &quot;left&quot;,
+            &quot;right&quot;,
+            &quot;notApplicable&quot;
+          ]
+        }
+      }
+    },
+    &quot;Employer&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;employerName&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Required when inPaidEmployment is true, otherwise optional.&quot;
+        },
+        &quot;address&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Address&quot;
+        }
+      },
+      &quot;description&quot;: &quot;Only required if paid employment = true.&quot;
+    },
+    &quot;Employment&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;inPaidEmployment&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;inPaidEmployment&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;True if patient is in paid employment.&quot;,
+          &quot;enum&quot;: [
+            &quot;True&quot;,
+            &quot;False&quot;
+          ]
+        },
+        &quot;employmentStatusCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Only required when the patient is in paid employment. See the EmploymentStatus code table for valid values.&quot;
+        },
+        &quot;otherEmployment&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Only required when employment status is 5 (other). Describe the employment.&quot;
+        },
+        &quot;workTypeCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Only required when inPaidEmployment is true. See the WorkType code table for valid values.&quot;
+        },
+        &quot;employer&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Employer&quot;
+        }
+      }
+    },
+    &quot;Incapacity&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;incapacityDateRange&quot;,
+        &quot;incapacityType&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;incapacityType&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;One type required when canResumeNormalWork is false (both types can be selected); otherwise not permitted.&quot;,
+          &quot;enum&quot;: [
+            &quot;Fitforselectedwork&quot;,
+            &quot;Fullyunfitforwork&quot;
+          ]
+        },
+        &quot;incapacityDateRange&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/DateRange&quot;
+        },
+        &quot;selectedAlternativeWork&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/SelectedAlternativeWork&quot;
+        }
+      }
+    },
+    &quot;Injury&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;accidentDate&quot;,
+        &quot;accidentLocationCode&quot;,
+        &quot;accidentSceneCode&quot;,
+        &quot;causeOfAccident&quot;,
+        &quot;involvesVehicle&quot;,
+        &quot;sportingInjury&quot;,
+        &quot;workInjury&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;accidentDate&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;,
+          &quot;description&quot;: &quot;ISO8601 complete date format YYYY-MM-DD.&quot;
+        },
+        &quot;accidentLocationCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See GeoLocation codetable for valid codes.&quot;
+        },
+        &quot;accidentSceneCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See Scene codetable for valid codes.&quot;
+        },
+        &quot;causeOfAccident&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;example&quot;: &quot;fell off ladder&quot;,
+          &quot;description&quot;: &quot;For the specific event.&quot;
+        },
+        &quot;involvesVehicle&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;True if accident involved a vehicle.&quot;,
+          &quot;enum&quot;: [
+            &quot;True&quot;,
+            &quot;False&quot;
+          ]
+        },
+        &quot;medicalTreatmentInjury&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;True for an injury received during treatment by a registered health professional.&quot;,
+          &quot;enum&quot;: [
+            &quot;True&quot;,
+            &quot;False&quot;
+          ]
+        },
+        &quot;workInjury&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;True for an injury related to work.&quot;,
+          &quot;enum&quot;: [
+            &quot;True&quot;,
+            &quot;False&quot;
+          ]
+        },
+        &quot;sportingInjury&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;True for an accident related to playing sport.&quot;,
+          &quot;enum&quot;: [
+            &quot;True&quot;,
+            &quot;False&quot;
+          ]
+        },
+        &quot;sportNameCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Only required if sportingInjury=true. See sport codetable for valid codes.&quot;
+        },
+        &quot;gradualProcessInjury&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;enum&quot;: [
+            &quot;True&quot;,
+            &quot;False&quot;
+          ]
+        },
+        &quot;admittedToHospital&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Only DHBs can set this to true.&quot;,
+          &quot;enum&quot;: [
+            &quot;True&quot;,
+            &quot;False&quot;
+          ]
+        },
+        &quot;injuryComments&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;assistanceRequired&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Only DHBs can set this to true.&quot;,
+          &quot;enum&quot;: [
+            &quot;True&quot;,
+            &quot;False&quot;
+          ]
+        },
+        &quot;accContactProvider&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See the rehabilitation code table for valid values.&quot;
+        }
+      }
+    },
+    &quot;Patient&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;address&quot;,
+        &quot;details&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;details&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/PatientDetails&quot;
+        },
+        &quot;occupationCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See the Occupation code table for valid values.&quot;
+        },
+        &quot;contact&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Contact&quot;
+        },
+        &quot;address&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Address&quot;
+        }
+      }
+    },
+    &quot;PatientDetails&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;dateOfBirth&quot;,
+        &quot;ethnicityCode&quot;,
+        &quot;firstName&quot;,
+        &quot;gender&quot;,
+        &quot;surname&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;nhi&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;National Health Index number.&quot;
+        },
+        &quot;firstName&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;middleName&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;surname&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;dateOfBirth&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;,
+          &quot;description&quot;: &quot;Mandatory for Claims. ISO8601 complete date format YYYY-MM-DD.&quot;
+        },
+        &quot;gender&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;enum&quot;: [
+            &quot;M&quot;,
+            &quot;F&quot;
+          ]
+        },
+        &quot;ethnicityCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See the Ethnicity code table for valid values.&quot;
+        },
+        &quot;otherEthnicity&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Only required when ethnicityCode is 54.&quot;
+        }
+      }
+    },
+    &quot;PhysicalRestrictions&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;restriction&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;enum&quot;: [
+            &quot;Lifting&quot;,
+            &quot;Posture&quot;,
+            &quot;Heavy Physical&quot;,
+            &quot;Repetition&quot;,
+            &quot;Vibration&quot;,
+            &quot;Temperature&quot;,
+            &quot;Driving&quot;,
+            &quot;Prolonged Sitting&quot;,
+            &quot;Prolonged Walking&quot;,
+            &quot;Prolonged Standing&quot;,
+            &quot;Other&quot;
+          ]
+        }
+      }
+    },
+    &quot;Provider&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;address&quot;,
+        &quot;details&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;details&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/ProviderDetails&quot;
+        },
+        &quot;address&quot;: {
+          &quot;$ref&quot;: &quot;#/definitions/Address&quot;
+        }
+      }
+    },
+    &quot;ProviderDetails&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;firstName&quot;,
+        &quot;providerId&quot;,
+        &quot;providerTypeCode&quot;,
+        &quot;surname&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;providerId&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;ACC provider ID&quot;
+        },
+        &quot;providerTypeCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See ProviderType codetable for list of valid codes&quot;
+        },
+        &quot;firstName&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;middleName&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;surname&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    },
+    &quot;Referral&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;providerTypeCode&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;providerTypeCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;See ProviderType codetable for list of valid codes. Example: referral for Physiotherapy = 81&quot;
+        },
+        &quot;referralReason&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    },
+    &quot;SelectedAlternativeWork&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;alternativeWorkTypeCode&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Only required when Fitforselectedwork is selected. See the WorkType code table for valid values.&quot;
+        },
+        &quot;physicalRestrictions&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;description&quot;: &quot;When Fitforselectedwork is selected, you may choose one or more options from this list.&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/PhysicalRestrictions&quot;
+          }
+        },
+        &quot;restrictedDaysPerWeek&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;,
+          &quot;description&quot;: &quot;When Fitforselectedwork is selected, you can choose 1-7.&quot;
+        },
+        &quot;restrictedHoursPerDay&quot;: {
+          &quot;type&quot;: &quot;integer&quot;,
+          &quot;format&quot;: &quot;int32&quot;,
+          &quot;description&quot;: &quot;When Fitforselectedwork is selected, you can choose 1-24.&quot;
+        },
+        &quot;restrictionComment&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;When Fitforselectedwork is selected, you may add more details here.&quot;
+        }
+      },
+      &quot;description&quot;: &quot;Required when incapacityType=Fitforselectedwork.&quot;
+    },
+    &quot;Vendor&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [
+        &quot;hpiOrganisationNumber&quot;,
+        &quot;practiceName&quot;
+      ],
+      &quot;properties&quot;: {
+        &quot;practiceName&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;hpiOrganisationNumber&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;The ACC vendor ID (doesn’t have to be HPI format)&quot;
+        },
+        &quot;hpiFacilityNumber&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;The ACC facility number (doesn’t have to be HPI format)&quot;
+        }
+      }
+    },
+    &quot;WorkCapacity&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;canResumeNormalWork&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;description&quot;: &quot;Only for a patient who is employed or self-employed.&quot;,
+          &quot;enum&quot;: [
+            &quot;True&quot;,
+            &quot;False&quot;
+          ]
+        },
+        &quot;incapacity&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;description&quot;: &quot;Only required when canResumeNormalWork is false.&quot;,
+          &quot;items&quot;: {
+            &quot;$ref&quot;: &quot;#/definitions/Incapacity&quot;
+          }
+        },
+        &quot;returnToNormalWorkDate&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;format&quot;: &quot;date&quot;,
+          &quot;description&quot;: &quot;Optional when canResumeNormalWork is false.&quot;
+        }
+      }
+    }
+  }
+}</schema>
+    <schemaType>OpenApi</schemaType>
+    <serviceBinding>{&quot;compatibleMediaTypes&quot;:{}}</serviceBinding>
+    <status>Complete</status>
+</ExternalServiceRegistration>
