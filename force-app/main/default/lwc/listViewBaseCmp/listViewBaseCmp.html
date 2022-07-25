@@ -43,8 +43,8 @@
                         key-field="Id"
                         data={tableData}
                         columns={columns} 
-                        min-column-width="100"
-                        column-widths-mode="auto"
+                        min-column-width={minColumnWidth}
+                        column-widths-mode={columnWidthMode}
                         hide-checkbox-column
                         default-sort-direction={defaultSortDirection}
                         sorted-direction={sortDirection}
@@ -59,8 +59,8 @@
                         key-field="Id"
                         data={tableData}
                         columns={columns}
-                        min-column-width="100"
-                        column-widths-mode="auto"
+                        min-column-width={minColumnWidth}
+                        column-widths-mode={columnWidthMode}
                         onrowaction={handleRowAction}
                         hide-checkbox-column>
                     </lightning-datatable>

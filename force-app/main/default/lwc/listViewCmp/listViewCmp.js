@@ -86,20 +86,15 @@ export default class ListViewCmp extends LightningElement {
             let listOfFields=JSON.parse(Object.values(objStr)[1]);
             
             let listOfRecords = JSON.parse(Object.values(objStr)[0]);
-            console.log(listOfFields);
-            console.log(listOfRecords);
 
             // flattening the JSON in order to access the records having relationship fields
             this.recordArray = this.processFlatten(listOfRecords);
-            console.log(this.recordArray);
             // in case of first column as a hyperlink, creating the urlField for same
             this.recordArray = this.createURLField(this.recordArray);
-            console.log(this.recordArray);
             this.recordArrayJson = JSON.stringify(this.recordArray);
 
             // creating the column structure of datatable
             this.columns = this.createColumns(listOfFields);
-            console.log(this.columns);
 
             this.dataIsLoaded = true;
             this.error = undefined; 
@@ -234,7 +229,6 @@ export default class ListViewCmp extends LightningElement {
     // Proxy the event from the base list view.
     handleRowAction(event) {
         //var updateEvent = new CustomEvent("fieldupdate", { detail: event.detail });
-        console.log(JSON.stringify(event));
         const cEvent = new CustomEvent('rowaction', {
             detail: event.detail
         });

@@ -100,9 +100,6 @@ export default class JsonListViewCmp extends LightningElement {
         //that is -- any nested columns are flattened.
         this.tableDataJson = this.transformTableData();
 
-        console.log(this.tableDataJson, null, 2);
-        console.log(this.columns, null, 2);
-
         //Update to trigger load of listViewBase
         this.dataIsLoaded = true;
     }

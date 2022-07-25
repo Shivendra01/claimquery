@@ -34,6 +34,10 @@ export default class ListViewBaseCmp extends LightningElement {
     @api recordCountForPagination;
     // Actions to display per row in the table. If none are provided, the action button is not displayed
     @api actions;
+    // Minimum width of each column
+    @api minColumnWidth;
+    // Mode of columns i.e., auto or fixed
+    @api columnWidthMode;
 
     //This is the real data.  The record contains all records to display (not paged)
     //Columns are the configuration for columns
@@ -66,6 +70,7 @@ export default class ListViewBaseCmp extends LightningElement {
     tableData=[];
     noRecordsFound=false;
     recordCount;  
+    isSavedState;
 
     @api savedState
   
@@ -89,12 +94,12 @@ export default class ListViewBaseCmp extends LightningElement {
             this.tableData = this.allRecords;
             //Initialise the pages and sorting 
             this.initialiseState();
-            console.log('pgno1: '+this.pageNumber);
+
             this.calculatePagination();
-            console.log('pgno2: '+this.pageNumber);
+
             //TODO still experimental
             this.sortTableData();
-            //console.log('pgno3: '+this.pageNumber);
+
         } catch (e){
             //Display an error or display nothing?
         }
@@ -115,23 +120,21 @@ export default class ListViewBaseCmp extends LightningElement {
         } else {
             this.pageSize = this.recordCount;
         }
-        console.log('SavedState: '+this.savedState);
+
         if (this.savedState) {
             try {
-                console.log('Start');
+                this.isSavedState = true;
                 let savedStateObj = JSON.parse(this.savedState);
                 this.pageSize = savedStateObj.pageSize;
                 this.pageNumber = savedStateObj.pageNumber;
                 this.sortedBy = savedStateObj.sortedBy;
                 this.sortDirection = savedStateObj.sortDirection;
                 this.searchKey = savedStateObj.searchKey;
-                console.log('End');
                 if(this.searchKey){
                     this.filteredRecords=this.searchKeyFilter(this.searchKey);
                 }
 
             } catch (e){
-                console.log('error: '+e);
                 //If we can't get state back, fail silently, as at least it'll still work
             }
         }
@@ -232,8 +235,8 @@ export default class ListViewBaseCmp extends LightningElement {
               };
 
         return function (a, b) {
-            a = key(a);
-            b = key(b);
+            a = key(a) ? key(a): '';
+            b = key(b) ? key(b): '';
             return reverse * ((a > b) - (b > a));
         };
     }
@@ -243,16 +246,21 @@ export default class ListViewBaseCmp extends LightningElement {
         const { fieldName: sortedBy, sortDirection } = event.detail;
         this.sortDirection = sortDirection;
         this.sortedBy = sortedBy;
+        this.isSavedState = false;
         this.sortTableData(sortedBy, sortDirection);
     }
 
     sortTableData() {
         this.filteredRecords = [...this.filteredRecords];
         this.filteredRecords.sort(this.sortBy(this.sortedBy, this.sortDirection === 'asc' ? 1 : -1));
-        //after sorting. Go to first page.  This makes as much sense as can when sorting?  Potentially go to the page you are on?
-        //TODO confirm if this is correct
-        //this.goToFirst();
-        this.getPageOfRecords(this.filteredRecords);
+        //after sorting. Go to first page.  This makes as much sense as can when sorting
+        //but if coming from saved state potentially go to the page you are on
+        if (!this.isSavedState) {
+            this.goToFirst();
+        }
+        else {
+            this.getPageOfRecords(this.filteredRecords);
+        }   
     }
 
     // this method implements the search functionality
@@ -264,7 +272,7 @@ export default class ListViewBaseCmp extends LightningElement {
         else {
             this.filteredRecords = this.allRecords;
         }
-
+        this.isSavedState = false;
         //recalcuate pagination and sorting after search
         this.sortTableData();
         this.calculatePagination();
@@ -277,6 +285,7 @@ export default class ListViewBaseCmp extends LightningElement {
             this.getPageOfRecords(this.filteredRecords);
         } else {
             this.showPagination = false;
+            this.getPageOfRecords(this.filteredRecords);
         }   
     }
 
@@ -288,7 +297,6 @@ export default class ListViewBaseCmp extends LightningElement {
     searchKeyFilter(searchKey) {
         //TODO need to pass in the search fieldNames -- this is slightly different than the the columns based on URL
         const fieldPathArray = this.columns.map(el => el.fieldName);
-        console.log(JSON.stringify(this.columns, null, 2));
         let searchFilteredArray = this.allRecords.filter(row => {
             //Element is a single record.  This is returning true if it matches filter
             //First only look at columns that are in the table (fieldPathArray)
@@ -302,7 +310,6 @@ export default class ListViewBaseCmp extends LightningElement {
                 let isMatch = this.searchKeyWordCheck(cell,searchKey);
                 return isMatch;
             });
-            console.log(matchedIndex + JSON.stringify(row));
             //If theres a match in a cell, then this whole row is a match. Return true.
             return matchedIndex >= 0;
         });
@@ -328,7 +335,6 @@ export default class ListViewBaseCmp extends LightningElement {
         console.log(cell);
         //TODO -- might want to check that this record can be co-erced to string?
         if(cell && cell.toLowerCase().includes(searchKey.toLowerCase())){
-            console.log('true ' + cell + ' ' + searchKey);
             return true;
         }
         return false;

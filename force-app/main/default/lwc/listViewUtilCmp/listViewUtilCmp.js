@@ -108,6 +108,7 @@ var  createUrlColumn = (colLabel, fieldPath, isSortable) => {
                 variant: 'Base',  
             },
             hideDefaultActions: true,
+            fixedWidth: 80,
             sortable: false
     };
 }
